@@ -90,7 +90,7 @@
         <option name="taskNames">
           <list>
             <option value="bootRun" />
-            <option value="--args='--endpoints=posts,comments,etc'" />
+            <option value="--args='--endpoints=posts[],comments'" />
           </list>
         </option>
         <option name="vmOptions" value="" />
@@ -144,7 +144,7 @@
       <option name="presentableId" value="Default" />
       <updated>1607099892972</updated>
       <workItem from="1607099894875" duration="4813000" />
-      <workItem from="1607118402372" duration="11688000" />
+      <workItem from="1607118402372" duration="16868000" />
     </task>
     <servers />
   </component>

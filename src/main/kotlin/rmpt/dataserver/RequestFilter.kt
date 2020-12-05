@@ -12,8 +12,19 @@ class RequestFilter(
     private val dataService: DataService
 ) : OncePerRequestFilter() {
 
-    private fun getEndpoint(requestUri: String): String {
-        return if(requestUri == "/") "ROOT" else requestUri.substring(1, requestUri.length)
+    private fun validRequest(requestUri: String, isPost: Boolean): Boolean {
+
+        if (requestUri == "/") return true
+
+        val trimmedRequestUri = requestUri.substring(1, requestUri.length)
+
+        if (dataService.exists(trimmedRequestUri)) return true
+
+        if (isPost) return false // for post requests we need to call the clean endpoint
+
+        val lastSlashIndex = trimmedRequestUri.lastIndexOf("/")
+        val endpoint = if (lastSlashIndex == -1) "ROOT" else trimmedRequestUri.substring(0, lastSlashIndex)
+        return dataService.exists(endpoint)
     }
 
     override fun doFilterInternal(
@@ -21,9 +32,8 @@ class RequestFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val endpoint = getEndpoint(request.requestURI)
-        if(!dataService.exists(endpoint)) {
-            println("Endpoint '$endpoint' does not exist.")
+        if (!validRequest(request.requestURI, "post" == request.method.toLowerCase())) {
+            println("Invalid request '${request.requestURI}'.")
             response.status = HttpStatus.BAD_REQUEST.value()
             return
         }
