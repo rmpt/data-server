@@ -5,13 +5,14 @@ import com.fasterxml.jackson.databind.node.TextNode
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
+import java.util.Optional
 import javax.annotation.PostConstruct
 
 @Service
 class DataService {
 
-    @Value("\${endpoints}")
-    private val endpointsParam: String? = null
+    @Value("\${endpoints:#{null}}")
+    private val endpointsParam: Optional<String>? = null
 
     private val endpoints: MutableSet<String> = mutableSetOf()
     private val endpoint2idField: MutableMap<String, String> = mutableMapOf()
@@ -20,8 +21,8 @@ class DataService {
     @PostConstruct
     private fun createEndpoints() {
         val endpointsList = mutableListOf("ROOT")
-        if (endpointsParam != null) {
-            endpointsList.addAll(endpointsParam.split(","))
+        if (endpointsParam != null && endpointsParam.isPresent) {
+            endpointsList.addAll(endpointsParam.get().split(","))
         }
         endpointsList.forEach {
             var currEndpoint = it.trim()
