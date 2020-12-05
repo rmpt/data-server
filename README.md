@@ -2,7 +2,7 @@
 
 ## docker
 
-If you just want to put have it running, use my docker image at: https://hub.docker.com/repository/docker/rmpt/rest-server
+If you just want to have it running, use my docker image at: https://hub.docker.com/repository/docker/rmpt/rest-server
 
 ## usage
 
@@ -45,8 +45,8 @@ Say you want the id for the `/posts` endpoint to be `postId`. The endpoints vari
 
 It's not mandatory to send an id field. Searches by id will be made according the id field, object without the id field will be ignored.
 
-There's no integrity, unique check or validation of any kind. `rest-server` is a  "bag of things", labeled by the given endpoints names. Here you can add, get, update and delete things.
+There's no integrity, unique check or validation of any kind. `rest-server` is a  "bag of things", labeled by the given endpoints names.
 
 There's no nested querying. For now, the query params are applied to the fields of each existing json objects. So if you have a `posts` object with a property `title`, you can query it with `/posts?title=Hi%2C+my+name+is`. But if you have a `posts` object with an `author` object field, you can't query inside it.
 
-You don't need to pass any `endpoints` variable if you don't want to, just work in the root.
+You don't need to define any `endpoints`, just work in the root.
