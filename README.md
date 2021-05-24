@@ -51,4 +51,4 @@ If you want to have it running, use my docker image at: https://hub.docker.com/r
 
 docker run 
    -e "endpoints=posts,comments" 
-   -p 8080:8080 rmpt/rest-server
+   -p 8080:8080 rmpt/rest-server:0.1
