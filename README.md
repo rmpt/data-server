@@ -2,7 +2,7 @@
 
 ## docker
 
-If you just want to have it running, use my docker image at: https://hub.docker.com/repository/docker/rmpt/rest-server
+If you just want to have it running, use my docker image at: https://hub.docker.com/r/rmpt/rest-server
 
 ## usage
 
@@ -49,4 +49,4 @@ There's no integrity, unique check or validation of any kind. `rest-server` is a
 
 There's no nested querying. For now, the query params are applied to the fields of each existing json objects. So if you have a `posts` object with a property `title`, you can query it with `/posts?title=Hi%2C+my+name+is`. But if you have a `posts` object with an `author` object field, you can't query inside it.
 
-You don't need to define any `endpoints`, just work in the root.
+You don't need to define any `endpoints`, just work in the root it that fits your needs.
