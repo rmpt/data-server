@@ -1,11 +1,5 @@
 # data-server
 
-## docker
-
-If you just want to have it running, use my docker image at: https://hub.docker.com/r/rmpt/rest-server
-
-## usage
-
 Say you want a rest server with 2 endpoints: `/posts` and `/comments`. The command to put it online is the following.
 
 
@@ -50,3 +44,11 @@ There's no integrity, unique check or validation of any kind. `rest-server` is a
 There's no nested querying. For now, the query params are applied to the fields of each existing json objects. So if you have a `posts` object with a property `title`, you can query it with `/posts?title=Hi%2C+my+name+is`. But if you have a `posts` object with an `author` object field, you can't query inside it.
 
 You don't need to define any `endpoints`, just work in the root it that fits your needs.
+
+## let's run it
+
+If you want to have it running, use my docker image at: https://hub.docker.com/r/rmpt/rest-server
+
+docker run 
+   -e "endpoints=posts,comments" 
+   -p 8080:8080 rmpt/rest-server
