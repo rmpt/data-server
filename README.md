@@ -4,7 +4,7 @@ Say you want a rest server with 2 endpoints: `/posts` and `/comments`. The comma
 
 
 ```
-gradle bootRun --args="--endpoints='posts,comments'"
+gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='pageSize'"
 ```
 
 Each endpoint will respond to 4 methods:
@@ -14,6 +14,12 @@ Each endpoint will respond to 4 methods:
 * DELETE
 
 In the last 3 methods, you can pass query params that will be used to filter the targeted json objects.
+
+But maybe you are running a webapp that handles pagination and you are passing `page` or `pageSize` query parameters.
+These parameters shouldn't be used to filter your data, so you can ignore them with:
+```
+gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='pageNumber,pageSize'"
+```
 
 ## body format
 
@@ -51,4 +57,4 @@ If you want to have it running, use my docker image at: https://hub.docker.com/r
 
 docker run 
    -e "endpoints=posts,comments" 
-   -p 8080:8080 rmpt/rest-server:0.1
+   -p 8080:8080 rmpt/rest-server:0.2
