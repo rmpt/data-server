@@ -3,15 +3,16 @@ package rmpt.dataserver
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import java.util.Optional
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 
@@ -20,6 +21,9 @@ class DataController(private val dataService: DataService) {
 
     @Value("\${ignoreQueryParams:#{null}}")
     private val ignoreQueryParams: String? = null
+
+    @Value("\${usePagination:#{false}}")
+    private var usePagination: Boolean = false
 
     private val mapper = ObjectMapper()
 
@@ -53,41 +57,47 @@ class DataController(private val dataService: DataService) {
     @PostMapping("**")
     @ResponseStatus(HttpStatus.CREATED)
     fun post(request: HttpServletRequest, @RequestBody content: String): JsonNode? {
-        val endpoint = getEndpoint(request.requestURI)
+        val (endpoint, _) = getEndpoint(request.requestURI)
         val jsonElement = mapper.readTree(content)
-        dataService.add(endpoint.first, jsonElement)
+        dataService.add(endpoint, jsonElement)
         return jsonElement
     }
 
     @GetMapping("**")
-    fun get(request: HttpServletRequest): Any? {
-        val endpoint2id = getEndpoint(request.requestURI)
-        val endpoint = endpoint2id.first
+    fun get(
+        request: HttpServletRequest,
+        @RequestParam(name = "page", defaultValue = "0") page: Int,
+        @RequestParam(name = "pageSize", defaultValue = "10") pageSize: Int
+    ): Any? {
+        val (endpoint, id) = getEndpoint(request.requestURI)
         val queryParams = requestParamMapToPairList(request)
+        val pageable = PageRequest.of(page, pageSize)
         return when {
-            endpoint2id.second != null -> dataService.getById(endpoint, endpoint2id.second!!)
-            queryParams.isNotEmpty() -> dataService.get(endpoint, queryParams)
-            else -> dataService.getAll(endpoint)
+            id != null -> dataService.getById(endpoint, id)
+            queryParams.isNotEmpty() ->
+                if(usePagination) dataService.getPage(endpoint, queryParams, pageable)
+                else dataService.get(endpoint, queryParams)
+            else ->
+                if(usePagination) dataService.getPage(endpoint, pageable)
+                else dataService.getAll(endpoint)
         }
     }
 
     @PutMapping("**")
     fun put(request: HttpServletRequest, @RequestBody content: String): JsonNode {
-        val endpoint2id = getEndpoint(request.requestURI)
-        val endpoint = endpoint2id.first
+        val (endpoint, id) = getEndpoint(request.requestURI)
         val jsonElement = mapper.readTree(content)
         return when {
-            endpoint2id.second != null -> dataService.updateById(endpoint, endpoint2id.second!!, jsonElement)
+            id != null -> dataService.updateById(endpoint, id, jsonElement)
             else -> dataService.update(endpoint, requestParamMapToPairList(request), jsonElement)
         }
     }
 
     @DeleteMapping("**")
     fun delete(request: HttpServletRequest): Boolean {
-        val endpoint2id = getEndpoint(request.requestURI)
-        val endpoint = endpoint2id.first
+        val (endpoint, id) = getEndpoint(request.requestURI)
         return when {
-            endpoint2id.second != null -> dataService.deleteById(endpoint, endpoint2id.second!!)
+            id != null -> dataService.deleteById(endpoint, id)
             else -> dataService.delete(endpoint, requestParamMapToPairList(request))
         }
     }

@@ -4,7 +4,7 @@ Say you want a rest server with 2 endpoints: `/posts` and `/comments`. The comma
 
 
 ```
-gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='pageSize'"
+gradle bootRun --args="--endpoints='posts,comments'"
 ```
 
 Each endpoint will respond to 4 methods:
@@ -15,11 +15,49 @@ Each endpoint will respond to 4 methods:
 
 In the last 3 methods, you can pass query params that will be used to filter the targeted json objects.
 
-But maybe you are running a webapp that handles pagination and you are passing `page` or `pageSize` query parameters.
+But maybe you are running a webapp that handles pagination and you are passing `page` and `pageSize` query parameters.
 These parameters shouldn't be used to filter your data, so you can ignore them with:
 ```
-gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='pageNumber,pageSize'"
+gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='page,pageSize'"
 ```
+
+Talking about pagination, this feature is optional on this dummy server, and disabled by default. To enable pagination
+you must set `usePagination` flag. Following our previous example
+```
+gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='page,pageSize' --usePagination=true"
+```
+In case you enable pagination, the returned format will be (default PageImp of Spring):
+
+````
+{
+   "content": [],
+   "pageable": {
+      "sort": {
+         "empty": true,
+         "unsorted": true,
+         "sorted": false
+      },
+      "offset": 0,
+      "pageNumber": 0,
+      "pageSize": 10,
+      "paged": true,
+      "unpaged": false
+   },
+   "totalPages": 0,
+   "totalElements": 0,
+   "last": true,
+   "size": 10,
+   "number": 0,
+   "sort": {
+      "empty": true,
+      "unsorted": true,
+      "sorted": false
+   },
+   "numberOfElements": 0,
+   "first": true,
+   "empty": true
+}
+````
 
 ## body format
 
