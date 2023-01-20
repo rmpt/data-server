@@ -71,13 +71,18 @@ All data must be formatted as JSON. For instante, to add a post entry in posts e
 }
 ```
 
-## customization
+## ids
 
 The default key field is `id`. That means if you make a request for `/posts/1` a json object with `"id": 1` will be searched. You can change the the name of this key field on the endpoints variable.
 
 Example:
 
 Say you want the id for the `/posts` endpoint to be `postId`. The endpoints variable would be something like this: `--endpoints='posts[postId],comments'`. With this, when you request `/posts/id` a json object with `"postId": 1` will be searched.
+
+Apart from the name of the id field, you can control if the ids are automatically generated or not through `autoGenerateIds` 
+option. This variable is **enabled by default**, that means if you POST some data without the id field, it will be 
+automatically created for you. If you send the id field, then the provided id will be kept. If you want to disable 
+this behaviour, you can do it with the variable `autoGenerateIds=false`, the objects will be stored as received.
 
 ### notes
 
