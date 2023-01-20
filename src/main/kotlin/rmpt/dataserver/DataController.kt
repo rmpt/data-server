@@ -31,7 +31,7 @@ class DataController(private val dataService: DataService) {
 
     @PostConstruct
     private fun init() {
-        if(ignoreQueryParams != null) {
+        if (ignoreQueryParams != null) {
             ignoreQueryParamsSet.addAll(ignoreQueryParams.split(","))
         }
     }
@@ -75,10 +75,10 @@ class DataController(private val dataService: DataService) {
         return when {
             id != null -> dataService.getById(endpoint, id)
             queryParams.isNotEmpty() ->
-                if(usePagination) dataService.getPage(endpoint, queryParams, pageable)
+                if (usePagination) dataService.getPage(endpoint, queryParams, pageable)
                 else dataService.get(endpoint, queryParams)
             else ->
-                if(usePagination) dataService.getPage(endpoint, pageable)
+                if (usePagination) dataService.getPage(endpoint, pageable)
                 else dataService.getAll(endpoint)
         }
     }
