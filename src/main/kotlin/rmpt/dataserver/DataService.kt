@@ -1,6 +1,7 @@
 package rmpt.dataserver
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageImpl
@@ -15,6 +16,9 @@ class DataService {
 
     @Value("\${endpoints:#{null}}")
     private val endpointsParam: Optional<String>? = null
+
+    @Value("\${autoGenerateIds:#{true}}")
+    private var autoGenerateIds: Boolean = true
 
     private val endpoints: MutableSet<String> = mutableSetOf()
     private val endpoint2idField: MutableMap<String, String> = mutableMapOf()
@@ -45,16 +49,16 @@ class DataService {
 
             data[currEndpoint] = mutableListOf()
             endpoints.add(currEndpoint)
-
-            if ("ROOT" != it) {
-                println("Endpoint '$currEndpoint' created")
-            }
         }
     }
 
     fun exists(endpoint: String): Boolean = endpoints.contains(endpoint)
 
     fun add(endpoint: String, jsonElement: JsonNode) {
+        val endpointKey = endpoint2idField[endpoint]
+        if (autoGenerateIds && jsonElement.findValue(endpointKey) == null) {
+            (jsonElement as ObjectNode).put(endpointKey, UUID.randomUUID().toString())
+        }
         data[endpoint]!!.add(jsonElement)
     }
 
@@ -122,7 +126,7 @@ class DataService {
 
     private fun buildPageResponse(jsonNodes: List<JsonNode>, pageable: Pageable): PageImpl<JsonNode> {
         val chunked = jsonNodes.chunked(pageable.pageSize)
-        return if(pageable.pageNumber > chunked.size-1) PageImpl(emptyList(), pageable, 0)
+        return if (pageable.pageNumber > chunked.size - 1) PageImpl(emptyList(), pageable, 0)
         else PageImpl(chunked[pageable.pageNumber], pageable, jsonNodes.size.toLong())
     }
 }
