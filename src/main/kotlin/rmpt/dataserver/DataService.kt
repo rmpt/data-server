@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.lang.RuntimeException
+import java.util.UUID
 import java.util.Optional
 import javax.annotation.PostConstruct
 
