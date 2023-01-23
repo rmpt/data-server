@@ -1,5 +1,13 @@
 # data-server
 
+In-memory REST server to use as a dummy or develop server/back-end.
+
+This server will not persist any data from one run to the other, it just saves the data while running and allows POST, GET, PUT and DELETE operations over the in-memory data.
+
+You can run it as a spring boot app or as a docker container as described bellow.
+
+# Example
+
 Say you want a rest server with 2 endpoints: `/posts` and `/comments`. The command to put it online is the following.
 
 
@@ -73,11 +81,13 @@ All data must be formatted as JSON. For instante, to add a post entry in posts e
 
 ## ids
 
-The default key field is `id`. That means if you make a request for `/posts/1` a json object with `"id": 1` will be searched. You can change the the name of this key field on the endpoints variable.
+The default key field is `id`. That means if you make a GET request for `/posts/1`, a json object with `"id": 1` will be searched.
 
-Example:
+You can change the the name of this key field on the endpoints variable.
 
-Say you want the id for the `/posts` endpoint to be `postId`. The endpoints variable would be something like this: `--endpoints='posts[postId],comments'`. With this, when you request `/posts/id` a json object with `"postId": 1` will be searched.
+**Example for a custom id field:**
+
+Say you want the id for the `/posts` endpoint to be `postId` (instead of id). The endpoints variable would be something like this: `--endpoints='posts[postId],comments'`. With this, when you request `/posts/1` a json object with `"postId": 1` will be searched.
 
 Apart from the name of the id field, you can control if the ids are automatically generated or not through `autoGenerateIds` 
 option. This variable is **enabled by default**, that means if you POST some data without the id field, it will be 
@@ -94,7 +104,7 @@ There's no nested querying. For now, the query params are applied to the fields 
 
 You don't need to define any `endpoints`, just work in the root it that fits your needs.
 
-## let's run it
+## Docker
 
 If you want to have it running, use my docker image at: https://hub.docker.com/r/rmpt/rest-server
 
