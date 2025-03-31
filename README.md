@@ -10,9 +10,13 @@ You can run it as a spring boot app or as a docker container as described bellow
 
 Say you want a rest server with 2 endpoints: `/posts` and `/comments`. The command to put it online is the following.
 
-
+Linux:
 ```
-gradle bootRun --args="--endpoints='posts,comments'"
+mvn spring-boot:run -Dspring-boot.run.arguments="--endpoints=posts,comments"
+```
+Windows:
+```
+mvn spring-boot:run -D"spring-boot.run.arguments"="--endpoints=posts,comments --ignoreQueryParams=page,pageSize"
 ```
 
 Each endpoint will respond to 4 methods:
@@ -25,15 +29,26 @@ In the last 3 methods, you can pass query params that will be used to filter the
 
 But maybe you are running a webapp that handles pagination and you are passing `page` and `pageSize` query parameters.
 These parameters shouldn't be used to filter your data, so you can ignore them with:
+Linux:
 ```
-gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='page,pageSize'"
+mvn spring-boot:run -Dspring-boot.run.arguments="--endpoints=posts,comments --ignoreQueryParams=page,pageSize"
+```
+Windows:
+```
+mvn spring-boot:run -D"spring-boot.run.arguments"="--endpoints=posts,comments --ignoreQueryParams=page,pageSize"
 ```
 
-Talking about pagination, this feature is optional on this dummy server, and disabled by default. To enable pagination
+Pagination feature is optional on this dummy server, and disabled by default. To enable pagination
 you must set `usePagination` flag. Following our previous example
+Linux:
 ```
-gradle bootRun --args="--endpoints='posts,comments' --ignoreQueryParams='page,pageSize' --usePagination=true"
+mvn spring-boot:run -Dspring-boot.run.arguments="--endpoints=posts,comments --ignoreQueryParams=page,pageSize --usePagination=true"
 ```
+Windows:
+```
+mvn spring-boot:run -D"spring-boot.run.arguments"="--endpoints=posts,comments --ignoreQueryParams=page,pageSize --usePagination=true"
+```
+
 In case you enable pagination, the returned format will be (default PageImp of Spring):
 
 ````
