@@ -2,6 +2,8 @@ package rmpt.dataserver
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.annotation.PostConstruct
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
@@ -13,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import javax.annotation.PostConstruct
-import javax.servlet.http.HttpServletRequest
 
 @RestController
 class DataController(private val dataService: DataService) {

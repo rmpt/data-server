@@ -3,6 +3,7 @@ package rmpt.dataserver
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
+import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service
 import java.lang.RuntimeException
 import java.util.UUID
 import java.util.Optional
-import javax.annotation.PostConstruct
 
 @Service
 class DataService {
